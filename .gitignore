@@ -2,6 +2,6 @@
 /.idea
 /.vscode
 /node_modules
-/dist
+/build
 /coverage
 package-lock*
