@@ -1,0 +1,22 @@
+.bookStore {
+    margin: 100px;
+    h1 {
+        text-align: center;
+    }
+    &-list {
+        margin-top: 100px;
+        text-align: center;
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    }
+    &-shoppingCart {
+        margin-top: 100px;
+    }
+    &-totalBill {
+        margin-top: 100px;
+        text-align: center;
+    }
+}

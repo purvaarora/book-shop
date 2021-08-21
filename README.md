@@ -1,1 +1,1 @@
-# book-shop
+# Getting Started with Book Shop
