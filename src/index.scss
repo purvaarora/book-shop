@@ -2,6 +2,10 @@ body {
     font-family: 'Raleway', sans-serif;
 }
 
+// nav {
+    
+// }
+
 .bookStore {
     margin: 20px 200px;
     h1 {
@@ -45,6 +49,24 @@ body {
                 text-align: right;
                 input {
                     width: 10%;
+                    border: none;
+                    text-align: center;
+                    height: 25px;
+                    vertical-align: bottom;
+                }
+                button {
+                    border: none;
+                    background: none;
+                    svg {
+                        height: 20px;
+                        width: 20px;
+                    }
+                }
+                &-remove {
+                    color: #cc0000;
+                }
+                &-add {
+                    color: #00802b;
                 }
             }
             &-description {
