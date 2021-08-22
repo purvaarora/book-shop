@@ -1,13 +1,3 @@
-import React from 'react'
-import map from 'lodash/map'
-import find from 'lodash/find'
-import get from 'lodash/get'
-import cloneDeep from 'lodash/cloneDeep'
-import values from 'lodash/values'
-import sum from 'lodash/sum'
-
-import { ListItem } from './components/ListItem'
-
 /*
 To try and encourage more sales of different books from a popular 5 book series, a bookshop has decided to offer discounts on multiple book 
 purchases. One copy of any of the five books costs $8. If, however, you buy two different books, you get a 5% discount on those two books. 
@@ -21,51 +11,31 @@ For example, how much does this basket of books cost?
 2 copies of the first book 2 copies of the second book 2 copies of the third book 1 copy of the fourth book 1 copy of the fifth book
 */
 
+import React from 'react'
+import map from 'lodash/map'
+import find from 'lodash/find'
+import get from 'lodash/get'
+import cloneDeep from 'lodash/cloneDeep'
+import values from 'lodash/values'
+import sum from 'lodash/sum'
+import PropTypes from 'prop-types'
+
+import ListItem from './components/ListItem'
+
 class BookStore extends React.Component {
   constructor(props) {
     super(props);
-    this.books = [
-      {
-        id: 'book1',
-        amount: 8,
-        title: 'Harry Potter and the Sorcerers Stone',
-        author: 'J.K. Rowling'
-      },
-      {
-        id: 'book2',
-        amount: 8,
-        title: 'Harry Potter and the Chamber of Secrets',
-        author: 'J.K. Rowling'
-      },
-      {
-        id: 'book3',
-        amount: 8,
-        title: 'Harry Potter and the Prisoner of Azkaban',
-        author: 'J.K. Rowling'
-      },
-      {
-        id: 'book4',
-        amount: 8,
-        title: 'Harry Potter and the Goblet of Fire',
-        author: 'J.K. Rowling'
-      },
-      {
-        id: 'book5',
-        amount: 8,
-        title: 'Harry Potter and the Order of the Phoenix',
-        author: 'J.K. Rowling'
-      },
-    ];
-    this.baseFare = 8;
+    this.baseFare = 8; // Base fare for each book (All books have same fare for this case)
     this.state = {
-      shoppingCart: {},
-      amount: 0,
+      shoppingCart: {}, // to maintain books added by guest
+      amount: 0, // final amount of cart
     }
     this.handleAddToCart = this.handleAddToCart.bind(this)
     this.handleRemoveFromCart = this.handleRemoveFromCart.bind(this)
     this.handleTotalBill = this.handleTotalBill.bind(this)
   }
 
+  // Method to add a book to shopping cart
   handleAddToCart(id) {
     let shoppingCart = this.state.shoppingCart
     if (!shoppingCart[id]) {
@@ -80,6 +50,7 @@ class BookStore extends React.Component {
     })
   }
 
+  // Method to remove a book from shopping cart
   handleRemoveFromCart(id) {
     let shoppingCart = cloneDeep(this.state.shoppingCart)
     shoppingCart[id]--
@@ -97,6 +68,7 @@ class BookStore extends React.Component {
     let { amount = 0 } = this.state
     let tempShoppingCart = cloneDeep(this.state.shoppingCart)
     let totalAmount = 0
+    // Discount based on unique books count
     let getDiscount = function (count) {
       switch (count) {
         case 2:
@@ -108,11 +80,18 @@ class BookStore extends React.Component {
         case 5:
           return 25;
         default:
-          return 0;
+          break;
       }
     }
+    /* 
+      Create sets of unique books to maximum discount calculation. 
+      For example if cart has AABBCDE,
+      first calculate price for ABCDE - 25% discount
+      then price for AB - 5% discount
+    */
     while (Object.keys(tempShoppingCart).length > 0) {
       let differentBooksCount = 0
+
       for (let book in tempShoppingCart) {
         differentBooksCount++
         tempShoppingCart[book]--
@@ -133,6 +112,7 @@ class BookStore extends React.Component {
 
   render() {
     let { shoppingCart, amount } = this.state
+    let { books } = this.props
     let totalBooksCount = sum(values(shoppingCart))
     let totalDiscount = this.baseFare * totalBooksCount - amount
     return (
@@ -141,7 +121,8 @@ class BookStore extends React.Component {
         <div className="bookStore-container">
           <div className="bookStore-list">
             {
-              map(this.books, (book) => {
+              // Map through books master data to display book item
+              map(books, (book) => {
                 return (
                   <div className="bookStore-list-item" key={book.id}>
                     <ListItem
@@ -149,6 +130,7 @@ class BookStore extends React.Component {
                       handleAddToCart={this.handleAddToCart}
                       handleRemoveFromCart={this.handleRemoveFromCart}
                       shoppingCartValue={shoppingCart[book.id]}
+                      baseBookFare={this.baseFare}
                     />
                   </div>
                 )
@@ -163,7 +145,7 @@ class BookStore extends React.Component {
                   map(shoppingCart, (count, bookId) => {
                     return (
                       <div key={bookId} className="bookStore-shoppingCart-item">
-                        <div>{get(find(this.books, ['id', bookId]), 'title', '')}</div>
+                        <div>{get(find(books, ['id', bookId]), 'title', '')}</div>
                         <div>{count}</div>
                       </div>
                     )
@@ -171,6 +153,7 @@ class BookStore extends React.Component {
                 }
                 <div className="bookStore-totalBill">
                   {
+                    // Show discount and total amount fields only if any discount is applied
                     totalDiscount > 0 && <React.Fragment>
                       <div className="bookStore-totalBill-item">
                         <div>Total Amount:</div>
@@ -188,6 +171,7 @@ class BookStore extends React.Component {
                   </div>
                 </div>
               </React.Fragment> :
+                // Displayed when cart is empty
                 <div>Your cart is empty!</div>
             }
           </div>
@@ -196,5 +180,9 @@ class BookStore extends React.Component {
     )
   }
 }
+
+BookStore.propTypes = {
+  books: PropTypes.arrayOf(PropTypes.shape({})).isRequired
+};
 
 export default BookStore

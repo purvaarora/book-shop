@@ -1,0 +1,116 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ListItem component tests matches snapshot 1`] = `
+Array [
+  <img />,
+  <div
+    className="bookStore-list-item-description"
+  >
+    <div>
+      <p>
+        Harry Potter and the Sorcerers Stone
+      </p>
+      <p
+        className="subText"
+      >
+        By 
+        J.K. Rowling
+      </p>
+      <p>
+        $ 
+        8.00
+      </p>
+    </div>
+    <div
+      className="bookStore-list-item-actionButtons"
+    >
+      <button
+        className="bookStore-list-item-actionButtons-remove"
+        disabled={false}
+        id="book1-remove"
+        onClick={[Function]}
+      >
+        <svg
+          fill="none"
+          height="1em"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="18"
+            rx="2"
+            ry="2"
+            width="18"
+            x="3"
+            y="3"
+          />
+          <line
+            x1="8"
+            x2="16"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+      <input
+        defaultValue={0}
+        readOnly={true}
+        value={1}
+      />
+      <button
+        className="bookStore-list-item-actionButtons-add"
+        id="book1-add"
+        onClick={[Function]}
+      >
+        <svg
+          fill="none"
+          height="1em"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth="2"
+          style={
+            Object {
+              "color": undefined,
+            }
+          }
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            height="18"
+            rx="2"
+            ry="2"
+            width="18"
+            x="3"
+            y="3"
+          />
+          <line
+            x1="12"
+            x2="12"
+            y1="8"
+            y2="16"
+          />
+          <line
+            x1="8"
+            x2="16"
+            y1="12"
+            y2="12"
+          />
+        </svg>
+      </button>
+    </div>
+  </div>,
+]
+`;

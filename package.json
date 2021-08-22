@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.8.3",
     "lodash": "^4.17.21",
     "node-sass": "^6.0.1",
+    "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "^4.2.0",
@@ -20,7 +21,7 @@
     "deploy": "gh-pages -b main -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --watchAll --collectCoverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -40,9 +41,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "jest": {
-    "collectCoverage": true
   },
   "devDependencies": {
     "enzyme": "^3.11.0",
