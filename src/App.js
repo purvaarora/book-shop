@@ -137,9 +137,7 @@ class BookStore extends React.Component {
     let totalDiscount = this.baseFare * totalBooksCount - amount
     return (
       <div className="bookStore">
-        <nav>
-          <h1>Purva's Book Shop</h1>
-        </nav>
+        <h1>Purva's Book Shop</h1>
         {/* <div className="bookStore-offer">
           <h3>UPTO 25% discount</h3>
           <h2>BIG SALE</h2>
