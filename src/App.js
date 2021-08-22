@@ -3,6 +3,10 @@ import map from 'lodash/map'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import cloneDeep from 'lodash/cloneDeep'
+import values from 'lodash/values'
+import sum from 'lodash/sum'
+
+import { ListItem } from './components/ListItem'
 
 /*
 To try and encourage more sales of different books from a popular 5 book series, a bookshop has decided to offer discounts on multiple book 
@@ -23,37 +27,46 @@ class BookStore extends React.Component {
     this.books = [
       {
         id: 'book1',
-        title: 'Harry Potter and the Sorcerers Stone'
+        amount: 8,
+        title: 'Harry Potter and the Sorcerers Stone',
+        author: 'J.K. Rowling'
       },
       {
         id: 'book2',
-        title: 'Harry Potter and the Chamber of Secrets'
+        amount: 8,
+        title: 'Harry Potter and the Chamber of Secrets',
+        author: 'J.K. Rowling'
       },
       {
         id: 'book3',
-        title: 'Harry Potter and the Prisoner of Azkaban'
+        amount: 8,
+        title: 'Harry Potter and the Prisoner of Azkaban',
+        author: 'J.K. Rowling'
       },
       {
         id: 'book4',
-        title: 'Harry Potter and the Goblet of Fire'
+        amount: 8,
+        title: 'Harry Potter and the Goblet of Fire',
+        author: 'J.K. Rowling'
       },
       {
         id: 'book5',
-        title: 'Harry Potter and the Order of the Phoenix'
+        amount: 8,
+        title: 'Harry Potter and the Order of the Phoenix',
+        author: 'J.K. Rowling'
       },
-    ]
+    ];
+    this.baseFare = 8;
     this.state = {
       shoppingCart: {},
-      amount: 0
+      amount: 0,
     }
     this.handleAddToCart = this.handleAddToCart.bind(this)
     this.handleRemoveFromCart = this.handleRemoveFromCart.bind(this)
     this.handleTotalBill = this.handleTotalBill.bind(this)
   }
 
-  handleAddToCart(event) {
-    let { id } = event.target
-    id = id.substr(0, id.indexOf('-'))
+  handleAddToCart(id) {
     let shoppingCart = this.state.shoppingCart
     if (!shoppingCart[id]) {
       shoppingCart[id] = 1
@@ -67,9 +80,7 @@ class BookStore extends React.Component {
     })
   }
 
-  handleRemoveFromCart(event) {
-    let { id } = event.target
-    id = id.substr(0, id.indexOf('-'))
+  handleRemoveFromCart(id) {
     let shoppingCart = cloneDeep(this.state.shoppingCart)
     shoppingCart[id]--
     if (shoppingCart[id] === 0) {
@@ -109,7 +120,7 @@ class BookStore extends React.Component {
           delete (tempShoppingCart[book])
         }
       }
-      amount = 8 * differentBooksCount
+      amount = this.baseFare * differentBooksCount
       if (differentBooksCount > 1) {
         amount -= (getDiscount(differentBooksCount) / 100 * amount)
       }
@@ -122,36 +133,69 @@ class BookStore extends React.Component {
 
   render() {
     let { shoppingCart, amount } = this.state
+    let totalBooksCount = sum(values(shoppingCart))
+    let totalDiscount = this.baseFare * totalBooksCount - amount
     return (
       <div className="bookStore">
         <h1>Purva's Book Shop</h1>
-        <div className="bookStore-list">
-          {
-            map(this.books, (book) => {
-              return (
-                <div className="bookStore-list-item" key={book.id}>
-                  <div>{book.title}</div>
-                  <div className="bookStore-list-item-actionButtons">
-                    <button id={`${book.id}-add`} onClick={this.handleAddToCart}>Add to Cart</button>
-                    <button id={`${book.id}-remove`} disabled={!shoppingCart[book.id]} onClick={this.handleRemoveFromCart}>Remove from Cart</button>
+        {/* <div className="bookStore-offer">
+          <h3>UPTO 25% discount</h3>
+          <h2>BIG SALE</h2>
+          <div>*Terms and Conditions applied</div>
+        </div> */}
+        <div className="bookStore-container">
+          <div className="bookStore-list">
+            {
+              map(this.books, (book) => {
+                return (
+                  <div className="bookStore-list-item" key={book.id}>
+                    <ListItem
+                      book={book}
+                      handleAddToCart={this.handleAddToCart}
+                      handleRemoveFromCart={this.handleRemoveFromCart}
+                      shoppingCartValue={shoppingCart[book.id]}
+                    />
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="bookStore-shoppingCart">
+            {
+              Object.keys(shoppingCart).length > 0 ? <React.Fragment>
+                <h3>SHOPPING CART</h3>
+                {
+                  map(shoppingCart, (count, bookId) => {
+                    return (
+                      <div key={bookId} className="bookStore-shoppingCart-item">
+                        <div>{get(find(this.books, ['id', bookId]), 'title', '')}</div>
+                        <div>{count}</div>
+                      </div>
+                    )
+                  })
+                }
+                <div className="bookStore-totalBill">
+                  {
+                    totalDiscount > 0 && <React.Fragment>
+                      <div className="bookStore-totalBill-item">
+                        <div>Total Amount:</div>
+                        <div>$ {(this.baseFare * totalBooksCount).toFixed(2)}</div>
+                      </div>
+                      <div className="bookStore-totalBill-item">
+                        <div>Discount:</div>
+                        <div>- $ {totalDiscount.toFixed(2)}</div>
+                      </div>
+                    </React.Fragment>
+                  }
+                  <div className="bookStore-totalBill-item finalAmount">
+                    <div>Final Amount:</div>
+                    <div>$ {amount.toFixed(2)}</div>
                   </div>
                 </div>
-              )
-            })
-          }
-        </div>
-        <div className="bookStore-shoppingCart">
-          <p>You selected:</p>
-          {
-            map(shoppingCart, (count, bookId) => {
-              return (
-                <div key={bookId}>{get(find(this.books, ['id', bookId]), 'title', '')} {count}</div>
-              )
-            })
-          }
-        </div>
-        <div className="bookStore-totalBill">
-          <p>Your total bill: {amount}</p>
+              </React.Fragment> :
+              <div>Your cart is empty!</div>
+            }
+          </div>
         </div>
       </div>
     )
