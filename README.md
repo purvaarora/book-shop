@@ -27,6 +27,6 @@ npm run test
 ```
 
 # Current Test Coverage
-
+![test coverage](https://raw.githubusercontent.com/purvaarora/book-shop/main/TestCoverage.png)
 
 # [DEMO](https://purvaarora.github.io/book-shop/)
